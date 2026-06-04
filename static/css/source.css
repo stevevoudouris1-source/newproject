@@ -1,0 +1,51 @@
+/* Tailwind input (source) stylesheet — the tracked customization point for the
+ * default UI. Build it with `uv run python manage.py tailwind build`, which
+ * compiles this to static/css/tailwind.css (a gitignored build artifact).
+ *
+ * Wired up via TAILWIND_CLI_SRC_CSS in config/settings/base.py. Do NOT move
+ * custom CSS into .django_tailwind_cli/source.css — that file is auto-generated
+ * and overwritten on every build.
+ */
+@import "tailwindcss";
+
+/* Self-hosted Inter (https://rsms.me/inter, OFL). Vendored under
+ * static/fonts/inter/ so the default UI needs no font CDN — offline-friendly,
+ * like the vendored HTMX/Alpine. Root-relative /static/ URLs resolve in dev and
+ * under WhiteNoise in prod; latin subset only (each weight ~24KB).
+ */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/static/fonts/inter/Inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/static/fonts/inter/Inter-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/static/fonts/inter/Inter-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/static/fonts/inter/Inter-700.woff2") format("woff2");
+}
+
+/* Make Inter the default sans family. In Tailwind v4 this drives both the
+ * `font-sans` utility and the document default via Preflight.
+ */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+}

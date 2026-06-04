@@ -1,0 +1,18 @@
+# Normalise line endings: LF everywhere (Python project; bash scripts must be LF
+# even on Windows). Windows batch files stay CRLF. Binaries are marked so git
+# never tries to "fix" them.
+* text=auto eol=lf
+
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+*.exe   binary
+*.sqlite3 binary

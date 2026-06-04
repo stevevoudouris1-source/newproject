@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ target.username }} &middot; Users{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-2xl">
+  <div class="flex items-center justify-between">
+    <div>
+      <a href="{% url 'user_list' %}" class="text-sm text-slate-500 hover:text-slate-700">&larr; All users</a>
+      <h1 class="mt-1 text-2xl font-semibold text-slate-900">{{ target.get_full_name|default:target.username }}</h1>
+    </div>
+    {% if can_manage and not target.is_claude_service %}
+      <a href="{% url 'user_edit' target.pk %}"
+         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800">
+        Edit
+      </a>
+    {% endif %}
+  </div>
+
+  <dl class="mt-6 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Username</dt>
+      <dd class="text-slate-900">{{ target.username }}</dd>
+    </div>
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Email</dt>
+      <dd class="text-slate-900">{{ target.email|default:"—" }}</dd>
+    </div>
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Status</dt>
+      <dd class="text-slate-900">{% if target.is_active %}Active{% else %}Inactive{% endif %}</dd>
+    </div>
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Role</dt>
+      <dd class="text-slate-900">{{ target.get_role_display }}</dd>
+    </div>
+  </dl>
+
+  <h2 class="mt-8 text-sm font-semibold text-slate-700">Permissions</h2>
+  {% if target.role == "admin" %}
+    <p class="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+      This user is an admin and implicitly has every permission.
+    </p>
+  {% endif %}
+  <div class="mt-2 rounded-xl border border-slate-200 bg-white">
+    {% for grant in grants %}
+      <div class="flex justify-between border-b border-slate-100 px-6 py-3 text-sm last:border-b-0">
+        <span class="font-mono text-slate-900">{{ grant.name }}</span>
+        <span class="text-slate-500">
+          {% if grant.resource_type %}{{ grant.resource_type }}#{{ grant.resource_id }}{% else %}global{% endif %}
+        </span>
+      </div>
+    {% empty %}
+      <p class="px-6 py-4 text-sm text-slate-500">No fine-grained permissions granted.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

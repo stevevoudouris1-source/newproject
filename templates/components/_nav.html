@@ -1,0 +1,32 @@
+{# Top navigation. Rendered only for authenticated users (see base.html). #}
+<nav class="bg-white border-b border-slate-200">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+    <div class="flex h-14 items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="{% url 'index' %}" class="flex items-center gap-2 font-semibold text-slate-900">
+          <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-slate-900 text-white">
+            {% include "components/icon.html" with name="layout-dashboard" class="h-4 w-4" %}
+          </span>
+          Turn 5 Internal Tools
+        </a>
+        {% if nav_can_view_users %}
+          <a href="{% url 'user_list' %}" class="text-sm text-slate-600 hover:text-slate-900">Users</a>
+        {% endif %}
+      </div>
+      <div class="flex items-center gap-4 text-sm">
+        <a href="{% url 'profile' %}" class="flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+          {% include "components/icon.html" with name="circle-user" class="h-4 w-4" %}
+          {{ user.email|default:user.username }}
+        </a>
+        <form method="post" action="{% url 'logout' %}" class="inline">
+          {% csrf_token %}
+          <button type="submit"
+                  class="flex items-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-slate-700 hover:bg-slate-200">
+            {% include "components/icon.html" with name="log-out" class="h-4 w-4" %}
+            Sign out
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>

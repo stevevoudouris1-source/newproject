@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run *)",
+      "Bash(uv sync*)",
+      "Bash(uv add *)",
+      "Bash(uv lock*)",
+      "Bash(bin/setup)",
+      "Bash(bin/ci)",
+      "Bash(./bin/setup)",
+      "Bash(./bin/ci)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git branch *)",
+      "Bash(git checkout *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git push origin *)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard *)",
+      "Bash(rm -rf *)",
+      "Bash(uv run python manage.py flush*)",
+      "Bash(uv run manage.py flush*)",
+      "Bash(python manage.py flush*)",
+      "Bash(uv run python manage.py reset_db*)",
+      "Bash(uv run python manage.py sqlflush*)"
+    ]
+  }
+}

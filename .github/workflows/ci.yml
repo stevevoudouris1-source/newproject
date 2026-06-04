@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv (and Python 3.13)
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Ruff format check
+        run: uv run ruff format --check .
+
+      - name: mypy (non-blocking for now)
+        run: uv run mypy . || true
+
+      - name: Migration linter (first-party apps; warnings fail too)
+        run: >
+          uv run python manage.py lintmigrations --no-cache --warnings-as-errors
+          --exclude-apps auth admin contenttypes sessions django_q guardian
+
+      - name: Migrations in sync with models
+        run: uv run python manage.py makemigrations --check --dry-run
+
+      - name: Tests (parallel via pytest-xdist)
+        run: uv run pytest -n auto

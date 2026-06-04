@@ -1,0 +1,20 @@
+{% comment %}
+Flash messages. settings.MESSAGE_TAGS maps levels to colour names:
+success->emerald, warning->amber, error->rose, info->sky, debug->slate.
+Class strings are written out in full so Tailwind's scanner keeps them.
+{% endcomment %}
+{% if messages %}
+  <div class="mb-6 space-y-2">
+    {% for message in messages %}
+      <div role="status"
+           class="rounded-md border px-4 py-3 text-sm
+             {% if 'emerald' in message.tags %}border-emerald-200 bg-emerald-50 text-emerald-800
+             {% elif 'amber' in message.tags %}border-amber-200 bg-amber-50 text-amber-800
+             {% elif 'rose' in message.tags %}border-rose-200 bg-rose-50 text-rose-800
+             {% elif 'sky' in message.tags %}border-sky-200 bg-sky-50 text-sky-800
+             {% else %}border-slate-200 bg-slate-50 text-slate-800{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

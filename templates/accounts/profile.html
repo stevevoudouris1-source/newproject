@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Profile &middot; Turn 5 Internal Tools{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-2xl">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold text-slate-900">Your profile</h1>
+    {% if can_change_password %}
+      <a href="{% url 'change_password' %}"
+         class="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+        Change password
+      </a>
+    {% endif %}
+  </div>
+  <dl class="mt-6 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Name</dt>
+      <dd class="text-slate-900">{{ user.get_full_name|default:"—" }}</dd>
+    </div>
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Email</dt>
+      <dd class="text-slate-900">{{ user.email|default:"—" }}</dd>
+    </div>
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Username</dt>
+      <dd class="text-slate-900">{{ user.username }}</dd>
+    </div>
+    <div class="flex justify-between px-6 py-4 text-sm">
+      <dt class="font-medium text-slate-500">Role</dt>
+      <dd class="text-slate-900">{{ user.get_role_display }}</dd>
+    </div>
+  </dl>
+</div>
+{% endblock %}

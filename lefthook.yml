@@ -1,0 +1,34 @@
+# Git hooks via lefthook. Install once with: uv run lefthook install
+# (bin/setup does this for you.)
+
+pre-commit:
+  parallel: true
+  commands:
+    # --force-exclude so files passed explicitly by the hook still honour the
+    # extend-exclude list in pyproject (e.g. generated migrations); matches what
+    # `ruff check .` / CI do.
+    ruff-check:
+      glob: "*.py"
+      run: uv run ruff check --force-exclude {staged_files}
+    ruff-format:
+      glob: "*.py"
+      run: uv run ruff format --check --force-exclude {staged_files}
+    # mypy is advisory (warnings, not errors — see pyproject/CI), so it never
+    # blocks a commit; it just surfaces type issues.
+    mypy:
+      glob: "*.py"
+      run: uv run mypy {staged_files} || true
+    # Only runs when a migration is staged; blocks on unsafe migrations.
+    migration-linter:
+      glob: "**/migrations/*.py"
+      run: >
+        uv run python manage.py lintmigrations --no-cache --warnings-as-errors
+        --exclude-apps auth admin contenttypes sessions django_q guardian
+
+# After each save, back it up automatically (non-blocking — a failed push, e.g.
+# offline, never blocks the commit). The full test suite runs in CI on `main`,
+# not on every push, so saving stays fast (see CLAUDE.md → Version control).
+post-commit:
+  commands:
+    auto-backup:
+      run: git push origin HEAD || true

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Users &middot; Turn 5 Internal Tools{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-4xl">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900">Users</h1>
+      <p class="mt-1 text-sm text-slate-500">
+        {{ page.paginator.count }} account{{ page.paginator.count|pluralize }}.
+      </p>
+    </div>
+    {% if can_manage %}
+      <a href="{% url 'user_create' %}"
+         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800">
+        New user
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <table class="min-w-full divide-y divide-slate-200 text-sm">
+      <thead class="bg-slate-50 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
+        <tr>
+          <th class="px-6 py-3">Username</th>
+          <th class="px-6 py-3">Email</th>
+          <th class="px-6 py-3">Name</th>
+          <th class="px-6 py-3">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        {% for u in page %}
+          <tr class="hover:bg-slate-50">
+            <td class="px-6 py-3">
+              <a href="{% url 'user_detail' u.pk %}" class="font-medium text-slate-900 hover:text-emerald-700 hover:underline">
+                {{ u.username }}
+              </a>
+            </td>
+            <td class="px-6 py-3 text-slate-600">{{ u.email|default:"—" }}</td>
+            <td class="px-6 py-3 text-slate-600">{{ u.get_full_name|default:"—" }}</td>
+            <td class="px-6 py-3">
+              {% if u.is_active %}
+                <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">Active</span>
+              {% else %}
+                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">Inactive</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="px-6 py-8 text-center text-slate-500">No users to show.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page.has_other_pages %}
+    <div class="mt-4 flex items-center justify-between text-sm text-slate-600">
+      <div>
+        {% if page.has_previous %}
+          <a href="?page={{ page.previous_page_number }}" class="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-50">Previous</a>
+        {% endif %}
+      </div>
+      <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+      <div>
+        {% if page.has_next %}
+          <a href="?page={{ page.next_page_number }}" class="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-50">Next</a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# bin/setup — one-command, idempotent project setup.
+# Works in Git Bash (Windows) and bash/zsh (Mac). Re-runnable any time.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+echo "==> Checking prerequisites"
+if ! command -v uv >/dev/null 2>&1; then
+  echo "ERROR: 'uv' is not installed or not on PATH."
+  echo "       Install it: https://docs.astral.sh/uv/getting-started/installation/"
+  echo "       (Then restart your terminal so PATH updates.)"
+  exit 1
+fi
+command -v git >/dev/null 2>&1 || { echo "ERROR: git is not installed."; exit 1; }
+uv --version
+git --version
+# uv reads .python-version and fetches Python 3.13 itself — no system Python needed.
+
+echo "==> Installing dependencies (uv sync)"
+uv sync
+
+if [ ! -f .env ]; then
+  echo "==> Creating .env from .env.example — open it and fill in the blanks."
+  cp .env.example .env
+else
+  echo "==> .env already exists; leaving it untouched."
+fi
+
+echo "==> Applying database migrations"
+uv run python manage.py migrate
+
+echo "==> Building Tailwind CSS (downloads the standalone CLI on first run)"
+uv run python manage.py tailwind build
+
+echo "==> Installing git hooks (lefthook)"
+uv run lefthook install || echo "WARN: 'lefthook install' failed (non-fatal)."
+
+echo ""
+echo "Setup complete. Start the app with:"
+echo "    uv run python manage.py runserver"
+echo "Then open http://localhost:8000/"
+echo ""
+echo "Browser (Playwright) tests are optional; enable them once with:"
+echo "    uv run playwright install chromium"

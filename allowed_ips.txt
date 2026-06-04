@@ -1,0 +1,26 @@
+# allowed_ips.txt — network allowlist for this app.
+#
+# Controls which client IP addresses may reach the app. This is a plain-text
+# file you edit by hand — no code and no redeploy needed; changes are picked up
+# automatically on the next request. It's committed to the repo so it's always
+# easy to find.
+#
+# Rules:
+#   - One entry per line.
+#   - Lines starting with # are comments; blank lines are ignored.
+#   - An entry can be a single IP (203.0.113.10) or a CIDR range (10.0.0.0/8).
+#   - The single entry "*" means ALLOW ALL.
+#   - A file with only comments / blank lines also means ALLOW ALL.
+#   - The health check at /up/ is ALWAYS reachable (load balancers need it).
+#
+# DEFAULT: allow all traffic. To restrict the app to your office / VPN / company
+# intranet, delete the "*" line below and list your approved IPs or ranges, e.g.:
+#
+#   203.0.113.0/24      # HQ office network
+#   198.51.100.42       # VPN gateway
+#
+# If you run behind a proxy / load balancer in production, also set
+# IP_ALLOWLIST_TRUST_FORWARDED_FOR=true in the environment so the real client IP
+# (not the proxy's) is checked. See ai_context/setup.md and CLAUDE.md.
+
+*

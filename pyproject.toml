@@ -1,0 +1,104 @@
+[project]
+name = "app-starting-point-turn5"
+version = "0.1.0"
+description = "Turn 5 internal-app starting point — Django template for AI-assisted, vibe-coded internal tools."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "django>=5.1,<5.3",
+    "django-environ",
+    "mozilla-django-oidc",
+    "django-guardian",
+    "django-tailwind-cli",
+    "django-htmx",
+    "django-q2",
+    "django-simple-history",
+    "django-ratelimit",
+    "mssql-django ; python_version >= '3.13'",
+    "pyodbc",
+    "whitenoise",
+    "gunicorn",
+    "django-csp>=4.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-django",
+    "pytest-cov",
+    "playwright",
+    "ruff",
+    "mypy",
+    "django-stubs[compatible-mypy]",
+    "django-migration-linter",
+    "nplusone",
+    "ipython",
+    "lefthook",
+    "pytest-xdist>=3.8.0",
+]
+
+# This is an application, not a distributable library: do not try to build/install it.
+[tool.uv]
+package = false
+
+# ---------------------------------------------------------------------------
+# Ruff — lint + format (single source of truth for style)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = [
+    "**/migrations/*",
+    ".venv",
+    "staticfiles",
+    "media",
+]
+
+[tool.ruff.lint]
+# E/F = pyflakes+pycodestyle, I = isort, UP = pyupgrade, B = bugbear, DJ = flake8-django
+select = ["E", "F", "I", "UP", "B", "DJ"]
+ignore = [
+    "E501",  # line length is enforced by the formatter, not the linter
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Settings modules legitimately use star-imports and module-level conditionals.
+"config/settings/*.py" = ["F403", "F405", "E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "config"]
+
+# ---------------------------------------------------------------------------
+# pytest + pytest-django
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+python_files = ["test_*.py", "tests.py", "*_test.py"]
+testpaths = ["tests", "apps"]
+addopts = "-q --strict-markers"
+markers = [
+    "browser: end-to-end Playwright tests (require `uv run playwright install chromium`)",
+]
+
+# ---------------------------------------------------------------------------
+# mypy + django-stubs (run as warnings in CI for now; see bin/ci)
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.13"
+plugins = ["mypy_django_plugin.main"]
+ignore_missing_imports = true
+warn_unused_ignores = false
+exclude = ['migrations/', 'staticfiles/']
+
+[tool.django-stubs]
+django_settings_module = "config.settings.dev"
+
+# ---------------------------------------------------------------------------
+# django-migration-linter
+# ---------------------------------------------------------------------------
+[tool.django_migration_linter]
+ignore_name_contains = ""
+exclude_migration_tests = []
+
+[tool.coverage.run]
+omit = ["*/migrations/*", "*/tests/*", "manage.py", "config/asgi.py", "config/wsgi.py"]

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# bin/save — save the user's work: stage everything, record a checkpoint, and
+# back it up to the cloud. Plain-English output (no git jargon).
+#
+# Usage:  bin/save "what changed"      (message optional)
+#
+# Works in Git Bash (Windows) and bash/zsh (Mac). Used by Claude as the
+# auto-save step, and available to the user directly.
+set -uo pipefail
+cd "$(dirname "$0")/.."
+
+msg="${1:-Save work}"
+
+if git diff --quiet && git diff --cached --quiet; then
+  echo "Nothing new to save — your work is already saved."
+else
+  git add -A
+  git commit -m "$msg" >/dev/null
+  echo "Saved: $msg"
+fi
+
+if git remote | grep -q .; then
+  if git push >/dev/null 2>&1; then
+    echo "Backed up to the cloud."
+  else
+    echo "WARN: couldn't back up just now (no network?) — your work is saved on this computer."
+  fi
+else
+  echo "No cloud backup is set up yet (no remote), but your work is saved on this computer."
+fi

@@ -1,0 +1,150 @@
+# .gitignore — Turn 5 "App Starting Point" (Python / Django template)
+#
+# Ported from the Rails sister template's secret-protection patterns and
+# adapted for a Python / Django / uv / Tailwind-CLI stack.
+#
+# The single most important job of this file is to make it IMPOSSIBLE to
+# accidentally commit a secret. Future sessions are driven by non-technical
+# execs; the path of least resistance must also be the safe one.
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# ---------------------------------------------------------------------------
+# Tooling caches (pytest, ruff, mypy)
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ---------------------------------------------------------------------------
+# Test coverage (pytest-cov)
+# ---------------------------------------------------------------------------
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# ---------------------------------------------------------------------------
+# uv / virtualenv
+# ---------------------------------------------------------------------------
+.venv/
+env/
+venv/
+ENV/
+# .python-version IS committed — it pins Python 3.13 for every fork created
+#   from this template (uv reads it). Do not ignore it.
+
+# ---------------------------------------------------------------------------
+# Django
+# ---------------------------------------------------------------------------
+*.log
+local_settings.py
+# SQLite prototype DB lives in db/ (see config/settings/dev.py). Ignore the
+# data files but keep the directory tracked via db/.keep.
+db/*.sqlite3
+db/*.sqlite3-journal
+db/*.sqlite3-[0-9]*
+db/development.sqlite3
+# Defensive: catch any stray root-level SQLite file too.
+db.sqlite3
+db.sqlite3-journal
+# collectstatic output and user uploads (source assets live in static/, tracked).
+staticfiles/
+media/
+
+# ---------------------------------------------------------------------------
+# Tailwind CLI binary cache + build output (django-tailwind-cli)
+#   The standalone binary and auto-generated source live in .django_tailwind_cli/.
+#   The compiled stylesheet is a build artifact rebuilt by `manage.py tailwind
+#   build` (run from bin/setup); do not commit it.
+# ---------------------------------------------------------------------------
+.django_tailwind_cli/
+static/css/tailwind.css
+
+# django-migration-linter local analysis cache (CI runs with --no-cache).
+*.pickle
+
+# ---------------------------------------------------------------------------
+# Environment / secrets — every depth, every common backup pattern
+# ---------------------------------------------------------------------------
+.env
+.env.*
+**/.env
+**/.env.*
+.envrc
+**/.envrc
+# Editor / OS backups of env files (people open .env in Notepad / VS Code / Office)
+.env~
+.env.bak
+.env.backup
+.env.old
+.env.swp
+.env.swo
+~$.env*
+.env.tmp
+# ...but DO track the secret-free template that documents the keys.
+# (The .env.* glob above would otherwise swallow it — this negation re-includes it.)
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Private keys and certs of any kind, anywhere
+# ---------------------------------------------------------------------------
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.ppk
+
+# ---------------------------------------------------------------------------
+# Claude Code — per-user local settings may hold local grants; never commit.
+# (.claude/settings.json IS tracked and shared; settings.local.json is not.)
+# ---------------------------------------------------------------------------
+.claude/settings.local.json
+
+# ---------------------------------------------------------------------------
+# OS & editor cruft
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+# Ignore VS Code workspace files but allow a shared, committed settings.json.
+# NOTE: we ignore .vscode/* (contents) rather than .vscode/ (the dir) so that
+# git can actually re-include the negated file below — re-inclusion fails if
+# the parent directory itself is excluded.
+.vscode/*
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# ---------------------------------------------------------------------------
+# Decision artifacts
+#   .env.example     — tracked (keys only, no secrets); re-included above.
+#   setup_decisions.md — tracked when it exists (secret-free summary). It is
+#       deliberately NOT created yet: its absence signals to a future Claude
+#       that the first-run setup interview has not been done. It is intentionally
+#       NOT listed as an ignore entry, so it commits normally once created.
+# ---------------------------------------------------------------------------
