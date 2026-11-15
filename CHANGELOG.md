@@ -38,6 +38,10 @@ single-tenant, deny-by-default.
   be edited here.
 - Users change their own password at `/accounts/password/`.
 
+**3D facility tour** (`apps/tours`, see `ai_context/tours.md`)
+- `/tour/` embeds a Matterport 3D walkthrough for any signed-in user, with an
+  "Open in a new tab" fallback. Linked from the nav bar as "3D Tour".
+
 **Pages & chrome**
 - Landing (`/`) — orientation page rendered in `base.html`.
 - Profile (`/accounts/profile/`), login (password form by default; Entra button
@@ -46,7 +50,8 @@ single-tenant, deny-by-default.
   font + Lucide icons.
 
 **Security & ops**
-- IP allowlist (`allowed_ips.txt`, allow-all by default), CSP (report-only),
+- IP allowlist (`allowed_ips.txt`, allow-all by default), CSP (report-only;
+  the only embeddable third-party host is `my.matterport.com`),
   CSRF, secrets only in `.env`.
 - Data: SQLite (prototype) or SQL Server (real) via `MODE`.
 - Tests: pytest + pytest-xdist; CI gate in `bin/ci` (ruff, format, mypy,
@@ -56,6 +61,11 @@ single-tenant, deny-by-default.
 ---
 
 ## Changelog
+
+### 2026-11-15
+- Added the embedded Matterport 3D tour page at `/tour/` (new `apps.tours`), a
+  "3D Tour" nav link, and a CSP `frame-src` allowance for `my.matterport.com`.
+- Captured stakeholder context and setup decisions (prototype / SQLite).
 
 ### 2026-06-04
 

@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "django_migration_linter",  # `manage.py lintmigrations` (strong_migrations analog)
     # Local
     "apps.accounts",
+    "apps.tours",  # embedded Matterport 3D tour (see ai_context/tours.md)
 ]
 
 # ---------------------------------------------------------------------------
@@ -207,6 +208,9 @@ CONTENT_SECURITY_POLICY_REPORT_ONLY = {
         "connect-src": ["'self'"],
         "base-uri": ["'self'"],
         "form-action": ["'self'"],
+        # The only third-party content the app embeds: the Matterport 3D tour
+        # on /tour/ (see ai_context/tours.md). Keep this to that one host.
+        "frame-src": ["https://my.matterport.com"],
         "frame-ancestors": ["'none'"],
         "object-src": ["'none'"],
     }

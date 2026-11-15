@@ -73,6 +73,7 @@ Internal tools built here typically sit over automotive-parts retail data
 |**[CHANGELOG.md](CHANGELOG.md)** | Living app specification + dated log of non-trivial changes|
 |**[ai_context/data_dictionary.md](ai_context/data_dictionary.md)** | Index of company DB/warehouse tables (links to per-domain files); built on first DB access|
 |**[ai_context/auth.md](ai_context/auth.md)** | Feature doc: authentication backends, permissions, and the user-management UI|
+|**[ai_context/tours.md](ai_context/tours.md)** | Feature doc: embedded Matterport 3D facility tour (`/tour/`)|
 |**[ai_context/security.md](ai_context/security.md)** | Feature doc: security guardrails â€” IP allowlist, rate limiting, CSP, secrets, prod hardening|
 
 ---
@@ -458,4 +459,8 @@ High-signal, durable notes for future sessions (see "Instructions for Claude" â†
 about this codebase, environment, or workflow; prune stale ones. Domain-specific
 learnings belong in an `ai_context/` reference file instead.
 
-- _(none yet)_
+- **Cloud sessions:** `bin/setup` copies `.env.example` to `.env` with a blank
+  `SECRET_KEY`, which makes `migrate` fail. Generate a `SECRET_KEY` (and a
+  `CLAUDE_ADMIN_PASSWORD`) into `.env`, then re-run `bin/setup`.
+- **Cloud sessions:** work happens on the session's assigned branch, and
+  `bin/save` can't back up until that branch has been pushed once.

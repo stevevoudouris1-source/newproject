@@ -20,5 +20,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # Liveness probe used by the platform / health checks. No auth.
     path("up/", health_check, name="health_check"),
+    path("", include("apps.tours.urls")),
     path("", include("apps.accounts.urls")),
 ]

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}3D Tour &middot; Turn 5 Internal Tools{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+  <header class="flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900">3D facility tour</h1>
+      <p class="mt-1 text-sm text-slate-600">
+        Click the play button to walk through the space. Use the full-screen
+        button in the bottom-right corner for a bigger view.
+      </p>
+    </div>
+    <a href="{{ tour_url }}" target="_blank" rel="noopener noreferrer"
+       class="rounded-md bg-slate-100 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-200">
+      Open in a new tab
+    </a>
+  </header>
+
+  {# xr-spatial-tracking lets Matterport offer its VR mode; fullscreen is essential for a walkthrough. #}
+  <div class="aspect-video w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-900 shadow-sm">
+    <iframe src="{{ tour_url }}"
+            title="Matterport 3D facility tour"
+            class="h-full w-full"
+            allow="fullscreen; xr-spatial-tracking"
+            allowfullscreen
+            loading="lazy"></iframe>
+  </div>
+</div>
+{% endblock %}
